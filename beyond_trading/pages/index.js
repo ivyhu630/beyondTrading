@@ -15,7 +15,6 @@ export default function Home() {
         <h1 className={styles.title}>
           Welcome to Beyond Trading!
         </h1>
-
         <p className={styles.description}>
           Get started by log in
         </p>
@@ -25,13 +24,13 @@ export default function Home() {
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://github.com/ivyhu630"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Created by Ivy Hu{' '}
           <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+            <Image src="/GitHub-Mark-32px.png" alt="Github Logo" width={32} height={32} />
           </span>
         </a>
       </footer>
