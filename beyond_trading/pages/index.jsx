@@ -1,6 +1,6 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
   return (
@@ -12,14 +12,8 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to Beyond Trading!
-        </h1>
-        <p className={styles.description}>
-          Get started by log in
-        </p>
-
-
+        <h1 className={styles.title}>Welcome to Beyond Trading!</h1>
+        <p className={styles.description}>Get started by log in</p>
       </main>
 
       <footer className={styles.footer}>
@@ -28,12 +22,17 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Created by Ivy Hu{' '}
+          Created by Ivy Hu{" "}
           <span className={styles.logo}>
-            <Image src="/GitHub-Mark-32px.png" alt="Github Logo" width={32} height={32} />
+            <Image
+              src="/GitHub-Mark-32px.png"
+              alt="Github Logo"
+              width={32}
+              height={32}
+            />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
