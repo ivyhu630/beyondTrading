@@ -2,7 +2,7 @@ import axios from 'axios';
 import Button from '../components/Button';
 import { useEffect, useState } from 'react';
 
-export default function Quote() {
+export default function Buy() {
   const [symbol, setSymbol] = useState('');
   const [price, setPrice] = useState(null);
   const [querySymbol, setQuerySymbol] = useState(null);
