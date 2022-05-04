@@ -11,20 +11,21 @@ export default function Quote() {
 
   useEffect(() => {}, [companyName]);
 
-  const fetchQuote = async (symbol) => {
+  const fetchQuote = async () => {
     const res = await fetch(`/api/get/${symbol}`);
     const { data } = await res.json();
-    const { companyName, latestPrice, symbol } = data;
+    const { companyName, latestPrice } = data;
+    const currentSymbol = data.symbol;
     setPrice(latestPrice);
     setCompanyName(companyName);
-    setQuerySymbol(symbol);
+    setQuerySymbol(currentSymbol);
     setSubmittedQuote(true);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('fetching');
-    fetchQuote(symbol);
+    fetchQuote();
   };
 
   const handleChange = (e) => {
@@ -43,7 +44,7 @@ export default function Quote() {
             onChange={handleChange}
           />
         </div>
-        <Button btnName="quote" />
+        <Button>Quote</Button>
         <div>
           {submittedQuote
             ? `A share of ${companyName}(${querySymbol}) costs $${price}.`
