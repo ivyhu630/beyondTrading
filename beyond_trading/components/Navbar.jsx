@@ -42,13 +42,13 @@ export default function Navbar() {
             Buy
           </a>
           <a
-            href="#responsive-header"
+            href="sell"
             className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
           >
             Sell
           </a>
           <a
-            href="#responsive-header"
+            href="#responsiv"
             className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
           >
             History

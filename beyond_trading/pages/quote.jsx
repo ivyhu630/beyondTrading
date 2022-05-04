@@ -24,7 +24,6 @@ export default function Quote() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('fetching');
     fetchQuote();
   };
 

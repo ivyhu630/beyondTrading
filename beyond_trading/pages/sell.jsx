@@ -1,10 +1,9 @@
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export default function Buy() {
+export default function Sell() {
   const [symbol, setSymbol] = useState('');
   const [shares, setShares] = useState('');
   const [price, setPrice] = useState(null);
@@ -13,18 +12,17 @@ export default function Buy() {
   const [submittedQuote, setSubmittedQuote] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {}, [companyName]);
-
-  const buyStock = async () => {
+  const sellStock = async () => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ symbol, shares }),
     };
-    const res = await fetch(`/api/post/${symbol}`, requestOptions);
+    console.log('selling ', symbol, shares);
+    const res = await fetch(`/api/post/sell`, requestOptions);
     const { data } = await res.json();
     const { companyName, latestPrice } = data;
-    console.log(' received ', companyName, latestPrice);
+    console.log(' sold ', companyName, latestPrice);
     const currentSymbol = data.symbol;
     setPrice(latestPrice);
     setCompanyName(companyName);
@@ -34,8 +32,8 @@ export default function Buy() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    buyStock();
-    router.push('/purchased');
+    sellStock();
+    // router.push('/purchased');
   };
 
   const handleSymbolChange = (e) => {
@@ -49,14 +47,19 @@ export default function Buy() {
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col items-center justify-center mt-20 pt-10 lg:justify-start">
         <div className="mb-6">
-          <input
+          <select
             type="text"
             className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
             id="exampleFormControlInput2"
             placeholder="Symbol"
             value={symbol}
             onChange={handleSymbolChange}
-          />
+          >
+            <option value="none" selected disabled>
+              Choose Symbol
+            </option>
+            <option>FB</option>
+          </select>
         </div>
         <div className="mb-6">
           <input
@@ -68,7 +71,7 @@ export default function Buy() {
             min="1"
           />
         </div>
-        <Button>Buy</Button>
+        <Button>Sell</Button>
       </div>
     </form>
   );

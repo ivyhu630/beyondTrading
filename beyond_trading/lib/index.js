@@ -1,12 +1,12 @@
-const {
+import {
   Pool
-} = require('pg');
+} from 'pg';
 
 const pool = new Pool({
   // host: process.env.DB_HOST,
   // user: process.env.DB_USER,
   // password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  database: 'beyondtrading',
   // port: process.env.DB_PORT,
   max: 20,
 });
