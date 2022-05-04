@@ -33,7 +33,7 @@ export default function Sell() {
   const handleSubmit = (e) => {
     e.preventDefault();
     sellStock();
-    // router.push('/purchased');
+    router.push('/history');
   };
 
   const handleSymbolChange = (e) => {
@@ -55,7 +55,7 @@ export default function Sell() {
             value={symbol}
             onChange={handleSymbolChange}
           >
-            <option value="none" selected disabled>
+            <option selected diabled>
               Choose Symbol
             </option>
             <option>FB</option>

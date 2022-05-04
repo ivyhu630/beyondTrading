@@ -35,7 +35,7 @@ export default function Buy() {
   const handleSubmit = (e) => {
     e.preventDefault();
     buyStock();
-    router.push('/purchased');
+    router.push('/history');
   };
 
   const handleSymbolChange = (e) => {
