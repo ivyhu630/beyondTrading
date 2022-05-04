@@ -1,35 +1,35 @@
+import axios from 'axios';
 import Button from '../components/Button';
 import { useEffect, useState } from 'react';
 
 export default function Quote() {
-  const [quote, setQuote] = useState('');
   const [symbol, setSymbol] = useState('');
+  const [price, setPrice] = useState(null);
+  const [querySymbol, setQuerySymbol] = useState(null);
+  const [companyName, setCompanyName] = useState(null);
+  const [submittedQuote, setSubmittedQuote] = useState(false);
 
-  // useEffect(() => {}, [quote]);
+  useEffect(() => {}, [companyName]);
 
-  const fetchQuote = async () => {
-    const params = { symbol };
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(params),
-    };
-    fetch('/api/getQuote', options);
-
-    const res = await fetch('/api/getQuote', options);
+  const fetchQuote = async (symbol) => {
+    const res = await fetch(`/api/get/${symbol}`);
     const { data } = await res.json();
-    console.log('data is ', data);
-    setQuote(data.companyName);
+    const { companyName, latestPrice, symbol } = data;
+    setPrice(latestPrice);
+    setCompanyName(companyName);
+    setQuerySymbol(symbol);
+    setSubmittedQuote(true);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('fetching');
-    fetchQuote();
+    fetchQuote(symbol);
   };
+
   const handleChange = (e) => {
     setSymbol(e.target.value);
   };
-  console.log(quote);
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col items-center justify-center mt-20 pt-10 lg:justify-start">
@@ -43,10 +43,16 @@ export default function Quote() {
             onChange={handleChange}
           />
         </div>
-        <button>click</button>
+        {/* <button className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+          quote
+        </button> */}
         <Button btnName="quote" />
+        <div>
+          {submittedQuote
+            ? `A share of ${companyName}(${querySymbol}) costs $${price}.`
+            : ''}
+        </div>
       </div>
-      <div>{quote}</div>
     </form>
   );
 }
