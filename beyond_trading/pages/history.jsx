@@ -8,6 +8,7 @@ export default function History() {
   useEffect(() => {
     fetchHistory();
   }, [totalMarketValue]);
+
   const fetchHistory = async () => {
     try {
       const res = await fetch(`/api/get/history`);
@@ -16,6 +17,8 @@ export default function History() {
       let updatedTransactions = {};
       let transactionList = [];
       let subtotal = 0;
+      let marketValue = 0;
+
       // grabbing companyName and consolidating total shares, total cost
       data.transactions.forEach((t) => {
         if (!(t.symbol in updatedTransactions)) {
@@ -34,6 +37,7 @@ export default function History() {
 
       for (let key of Object.keys(updatedTransactions)) {
         if (updatedTransactions[key].shares) {
+          marketValue += updatedTransactions[key].totalCost;
           transactionList.push({
             symbol: key,
             name: updatedTransactions[key].name,
@@ -49,10 +53,7 @@ export default function History() {
         const marketPrice = await fetchQuote(entry.symbol);
         entry.marketPrice = marketPrice;
       }
-      let marketValue = 0;
-      transactions.forEach((transaction) => {
-        marketValue += transaction.shares * transaction.marketPrice;
-      });
+
       await setTotalMarketValue(marketValue);
       await setTransactions(transactionList);
     } catch (err) {
@@ -71,7 +72,7 @@ export default function History() {
     style: 'currency',
     currency: 'USD',
   });
-  console.log('market v ', totalMarketValue);
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className=" pl-10 mt-5 w-75 text-sm text-left text-gray-500 history">
