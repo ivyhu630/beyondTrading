@@ -6,7 +6,7 @@ export default function History() {
   const [totalMarketValue, setTotalMarketValue] = useState(0);
 
   useEffect(() => {
-    fetchHistory();
+    // fetchHistory();
   }, [totalMarketValue]);
 
   const fetchHistory = async () => {
@@ -37,7 +37,6 @@ export default function History() {
 
       for (let key of Object.keys(updatedTransactions)) {
         if (updatedTransactions[key].shares) {
-          marketValue += updatedTransactions[key].totalCost;
           transactionList.push({
             symbol: key,
             name: updatedTransactions[key].name,
@@ -52,6 +51,7 @@ export default function History() {
       for (let entry of transactionList) {
         const marketPrice = await fetchQuote(entry.symbol);
         entry.marketPrice = marketPrice;
+        marketValue += entry.shares * entry.marketPrice;
       }
 
       await setTotalMarketValue(marketValue);

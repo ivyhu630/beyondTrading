@@ -33,3 +33,9 @@ a {
   border-radius: 15%;
   margin-right: 10px;
 }
+
+.PieChart {
+  height: 80%;
+  width: 80%;
+  padding: 10%;
+}
