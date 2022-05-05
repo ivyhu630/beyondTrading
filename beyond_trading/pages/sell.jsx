@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { useState } from 'react';
 
 export default function Sell() {
   const [symbol, setSymbol] = useState('');
+  const [symbolList, setSymbolList] = useState([]);
   const [shares, setShares] = useState('');
   const [price, setPrice] = useState(null);
   const [querySymbol, setQuerySymbol] = useState(null);
@@ -12,17 +13,44 @@ export default function Sell() {
   const [submittedQuote, setSubmittedQuote] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  // pull existing list of available stock
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch(`/api/get/history`);
+      const { data } = await res.json();
+      let updatedTransactions = {};
+      let tempSymbolList = [];
+      // grabbing companyName
+      data.transactions.forEach((t) => {
+        if (!(t.symbol in updatedTransactions)) {
+          updatedTransactions[t.symbol] = 0;
+        }
+        updatedTransactions[t.symbol] += t.shares;
+      });
+      for (let key of Object.keys(updatedTransactions)) {
+        if (updatedTransactions[key]) {
+          tempSymbolList.push(key);
+        }
+      }
+      await setSymbolList(tempSymbolList);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const sellStock = async () => {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ symbol, shares }),
     };
-    console.log('selling ', symbol, shares);
     const res = await fetch(`/api/post/sell`, requestOptions);
     const { data } = await res.json();
     const { companyName, latestPrice } = data;
-    console.log(' sold ', companyName, latestPrice);
     const currentSymbol = data.symbol;
     setPrice(latestPrice);
     setCompanyName(companyName);
@@ -58,7 +86,9 @@ export default function Sell() {
             <option selected diabled>
               Choose Symbol
             </option>
-            <option>FB</option>
+            {symbolList.map((symbol) => (
+              <option key={symbol}>{symbol}</option>
+            ))}
           </select>
         </div>
         <div className="mb-6">

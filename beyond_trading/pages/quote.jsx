@@ -44,7 +44,7 @@ export default function Quote() {
           />
         </div>
         <Button>Quote</Button>
-        <div>
+        <div className="pt-10">
           {submittedQuote
             ? `A share of ${companyName}(${querySymbol}) costs $${price}.`
             : ''}

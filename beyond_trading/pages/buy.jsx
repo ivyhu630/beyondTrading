@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
-import { useEffect, useState } from 'react';
 
 export default function Buy() {
   const [symbol, setSymbol] = useState('');
@@ -16,10 +16,11 @@ export default function Buy() {
   useEffect(() => {}, [companyName]);
 
   const buyStock = async () => {
+    let upperCaseSymbol = symbol.toUpperCase();
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ symbol, shares }),
+      body: JSON.stringify({ upperCaseSymbol, shares }),
     };
     const res = await fetch(`/api/post/${symbol}`, requestOptions);
     const { data } = await res.json();
@@ -34,8 +35,9 @@ export default function Buy() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    buyStock();
-    router.push('/history');
+    buyStock().then(() => {
+      // router.push('/history');
+    });
   };
 
   const handleSymbolChange = (e) => {
