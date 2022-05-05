@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react';
+import Button from '../components/Button';
+import PieChart from '../components/PieChart';
 
 export default function History() {
   const [transactions, setTransactions] = useState([]);
   const [cash, setCash] = useState('$0');
   const [totalMarketValue, setTotalMarketValue] = useState(0);
+  const [chartData, setChartData] = useState({});
+  let tempChartData = {};
 
   useEffect(() => {
-    // fetchHistory();
-  }, [totalMarketValue]);
+    fetchHistory();
+  }, []);
 
   const fetchHistory = async () => {
     try {
       const res = await fetch(`/api/get/history`);
       const { data, cash } = await res.json();
+      tempChartData.CASH = Number(cash.replace(/[^0-9.-]+/g, ''));
+
       await setCash(cash);
       let updatedTransactions = {};
       let transactionList = [];
@@ -52,8 +58,9 @@ export default function History() {
         const marketPrice = await fetchQuote(entry.symbol);
         entry.marketPrice = marketPrice;
         marketValue += entry.shares * entry.marketPrice;
+        tempChartData[entry.symbol] = entry.shares * entry.marketPrice;
       }
-
+      await setChartData(tempChartData);
       await setTotalMarketValue(marketValue);
       await setTransactions(transactionList);
     } catch (err) {
@@ -74,7 +81,7 @@ export default function History() {
   });
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg historyContainer">
       <table className=" pl-10 mt-5 w-75 text-sm text-left text-gray-500 history">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
@@ -169,6 +176,10 @@ export default function History() {
           </tr>
         </thead>
       </table>
+      <PieChart
+        labels={Object.keys(chartData)}
+        FMV={Object.values(chartData)}
+      />
     </div>
   );
 }

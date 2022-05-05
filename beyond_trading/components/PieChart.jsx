@@ -4,11 +4,10 @@ import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function Chart({
+export default function PieChart({
   labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
   FMV = [2, 19, 3, 5, 2],
 }) {
-  console.log(labels);
   let chartData = {
     labels,
     datasets: [
@@ -16,12 +15,12 @@ export default function Chart({
         label: 'perentage',
         data: FMV,
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
+          '#003f5c',
+          '#58508d',
+          '#bc5090',
+          '#ff6361',
+          '#ffa600',
+          '#dd5182',
         ],
         borderColor: [
           'rgba(255, 99, 132, 1)',
@@ -31,7 +30,7 @@ export default function Chart({
           'rgba(153, 102, 255, 1)',
           'rgba(255, 159, 64, 1)',
         ],
-        borderWidth: 1,
+        borderWidth: 0.5,
       },
     ],
   };
