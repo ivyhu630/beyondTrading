@@ -2,16 +2,20 @@ import { useEffect, useState } from 'react';
 
 export default function History() {
   const [transactions, setTransactions] = useState([]);
+  const [cash, setCash] = useState('$0');
+  const [totalMarketValue, setTotalMarketValue] = useState(0);
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [totalMarketValue]);
   const fetchHistory = async () => {
     try {
       const res = await fetch(`/api/get/history`);
-      const { data } = await res.json();
+      const { data, cash } = await res.json();
+      await setCash(cash);
       let updatedTransactions = {};
       let transactionList = [];
+      let subtotal = 0;
       // grabbing companyName and consolidating total shares, total cost
       data.transactions.forEach((t) => {
         if (!(t.symbol in updatedTransactions)) {
@@ -27,20 +31,29 @@ export default function History() {
         let totalCost = costPerShare * t.shares;
         updatedTransactions[t.symbol].totalCost += totalCost;
       });
+
       for (let key of Object.keys(updatedTransactions)) {
-        transactionList.push({
-          symbol: key,
-          name: updatedTransactions[key].name,
-          total: updatedTransactions[key].totalCost,
-          shares: updatedTransactions[key].shares,
-          marketPrice: 0,
-        });
+        if (updatedTransactions[key].shares) {
+          transactionList.push({
+            symbol: key,
+            name: updatedTransactions[key].name,
+            total: updatedTransactions[key].totalCost,
+            shares: updatedTransactions[key].shares,
+            marketPrice: 0,
+          });
+        }
       }
+
       // adding market price
       for (let entry of transactionList) {
         const marketPrice = await fetchQuote(entry.symbol);
         entry.marketPrice = marketPrice;
       }
+      let marketValue = 0;
+      transactions.forEach((transaction) => {
+        marketValue += transaction.shares * transaction.marketPrice;
+      });
+      await setTotalMarketValue(marketValue);
       await setTransactions(transactionList);
     } catch (err) {
       console.log(err);
@@ -58,7 +71,7 @@ export default function History() {
     style: 'currency',
     currency: 'USD',
   });
-
+  console.log(totalMarketValue);
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <table className=" mt-5 w-75 text-sm text-left text-gray-500 ">
@@ -116,6 +129,44 @@ export default function History() {
             </tr>
           </tbody>
         ))}
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3">
+              Cash
+            </th>
+            <th scope="col" className="px-6 py-3">
+              {cash}
+            </th>
+            <th scope="col" className="px-6 py-3">
+              <span className="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3" />
+            <th scope="col" className="px-6 py-3">
+              Total
+            </th>
+            <th scope="col" className="px-6 py-3">
+              {formatter.format(
+                Number(cash.replace(/[^0-9.-]+/g, '')) + totalMarketValue
+              )}
+            </th>
+            <th scope="col" className="px-6 py-3">
+              <span className="sr-only">Edit</span>
+            </th>
+          </tr>
+        </thead>
       </table>
     </div>
   );

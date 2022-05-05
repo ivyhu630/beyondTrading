@@ -52,7 +52,19 @@ module.exports = {
       VALUES($1, $2, $3, $4, (SELECT id from a))
       RETURNING id
     `;
+    const {
+      rows
+    } = await db.query('SELECT cash FROM users WHERE id=1')
+    const cashBeforeUpdate = rows[0].cash;
+    // Note that shares here are negative
+    const updatedCash = Number(cashBeforeUpdate.replace(/[^0-9.-]+/g, '')) - Number(latestPrice) * parseInt(shares)
+    const cashQuery = `
+      UPDATE users
+      SET cash = $1
+      WHERE id = 1
+    `;
     try {
+      await db.query(cashQuery, [updatedCash]);
       const {
         rows
       } = await db.query(query, [latestPrice, shares, symbol, companyName, 'testUser']);
@@ -100,7 +112,7 @@ module.exports = {
       const {
         rows
       } = await db.query(query);
-      return rows;
+      return rows[0].cash;
     } catch (err) {
       console.log(err);
     }

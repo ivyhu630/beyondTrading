@@ -36,7 +36,7 @@ export default function Buy() {
   const handleSubmit = (e) => {
     e.preventDefault();
     buyStock().then(() => {
-      // router.push('/history');
+      router.push('/history');
     });
   };
 

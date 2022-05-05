@@ -4,9 +4,14 @@ export default async (req, res) => {
 
   models.listTransactions()
     .then((data) => {
-      console.log('transactions are: ', data)
-      res.status(200).json({
-        data
-      })
+      models.getUserCash()
+        .then((cash) => {
+          console.log(cash)
+          res.status(200).json({
+            data,
+            cash
+          })
+        })
+
     })
 }
