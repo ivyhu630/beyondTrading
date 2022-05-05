@@ -18,3 +18,18 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.history {
+  margin-left: 3rem;
+}
+
+.logo {
+  height: 50px;
+  width: 50px;
+  background-image: url('../public/BTLogo.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-radius: 15%;
+  margin-right: 5px;
+}
