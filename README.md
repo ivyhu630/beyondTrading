@@ -1,7 +1,7 @@
 # MVP - Beyong Trading App
 MVP Project at Hack Reactor (completed under 48 hours)
 
-Beyond Trading is a investment simulator app that allows users to trade stock at real-time market price with token money.
+Beyond Trading is an investment simulator app that allows users to trade stock at real-time market price with token money.
 
 This application:
 * Uses a modern web development framework: Next.js
